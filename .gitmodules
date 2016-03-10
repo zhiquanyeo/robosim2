@@ -1,0 +1,6 @@
+[submodule "src/libs/blockly"]
+	path = src/libs/blockly
+	url = https://github.com/google/blockly.git
+[submodule "src/libs/JS-Interpreter"]
+	path = src/libs/JS-Interpreter
+	url = https://github.com/NeilFraser/JS-Interpreter.git
