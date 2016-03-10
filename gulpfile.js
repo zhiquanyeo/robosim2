@@ -6,6 +6,7 @@ var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var inject = require('gulp-inject');
 
 // Lint Task
 gulp.task('lint', function() {
@@ -31,12 +32,19 @@ gulp.task('build-js', function() {
         .pipe(gulp.dest('deploy/js'));
 });
 
+// TODO - We need to copy the blockly stuff correctly too
 // Copy libs
-gulp.task('copy-libs', function() {
-    return gulp.src('src/libs/*.js')
-        .pipe(gulp.dest('deploy/js'))
+gulp.task('copy-libs-debug', function() {
+    return gulp.src('src/libs/debug/*.js')
         .pipe(gulp.dest('debug/js'));
 });
+
+gulp.task('copy-libs-deploy', function() {
+    return gulp.src('src/libs/min/*.js')
+        .pipe(gulp.dest('deploy/js'));
+});
+
+gulp.task('copy-libs', ['copy-libs-debug', 'copy-libs-deploy']);
 
 gulp.task('watch', function() {
     gulp.watch('src/js/*.js', ['lint', 'build-js', 'copy-libs']);
