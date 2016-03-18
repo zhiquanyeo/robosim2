@@ -4,3 +4,6 @@
 [submodule "src/libs/JS-Interpreter"]
 	path = src/libs/JS-Interpreter
 	url = https://github.com/NeilFraser/JS-Interpreter.git
+[submodule "src/libs/w2ui"]
+	path = src/libs/w2ui
+	url = https://github.com/vitmalina/w2ui.git
