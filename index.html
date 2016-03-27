@@ -4,6 +4,9 @@
     <!-- inject:css -->
     <!-- endinject -->
     
+    <!-- jquery:js -->
+    <!-- endinject -->
+    
     <!-- jslibs:js -->
     <!-- endinject -->
     
@@ -11,5 +14,30 @@
     <!-- endinject -->
 </head>
 <body>
+    <div id="app-container">
+        <div id="toolbar" class="ui-widget-header ui-corner-all">
+            <span id="app-state">
+                <input type="radio" id="select-code-mode" name="appstate" checked="checked"><label for="select-code-mode">Code Mode</label>
+                <input type="radio" id="select-sim-mode" name="appstate"><label for="select-sim-mode">Simulation Mode</label>
+            </span>
+        </div>
+        <div id="main-app">
+            <div id="code-view" class="app-panel">
+                <ul>
+                    <li><a href="#code-view-blocks">Blocks</a></li>
+                    <li><a href="#code-view-editor">Editor</a></li>
+                </ul>
+                <div id="code-view-blocks">
+                    Blocks!
+                </div>
+                <div id="code-view-editor">
+                    Editor!
+                </div>
+            </div>
+            <div id="sim-view" class="app-panel">
+                Sim View!
+            </div>
+        </div>
+    </div>
 </body>
 </html>

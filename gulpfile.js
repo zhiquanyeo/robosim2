@@ -107,11 +107,6 @@ gulp.task('copy-libs:prod', COPY_LIB_TASKS_PROD);
 
 gulp.task('copy-libs:all', ['copy-libs:dev', 'copy-libs:prod']);
 
-gulp.task('watch', function() {
-    gulp.watch('src/js/*.js', ['lint', 'build-app:all', 'copy-libs:all']);
-    gulp.watch('src/scss/*.scss', ['sass']);
-});
-
 gulp.task('copy-html:dev', function () {
     return gulp.src('./index.html')
            .pipe(gulp.dest('debug')); 
@@ -125,19 +120,21 @@ gulp.task('copy-html:prod', function () {
 gulp.task('copy-html:all', ['copy-html:dev', 'copy-html:prod']);
 
 // Building involves injecting the relevant files
-gulp.task('build:dev', ['copy-libs:dev', 'copy-html:dev', 'build-app:dev'], function () {
+gulp.task('build:dev', ['sass', 'copy-libs:dev', 'copy-html:dev', 'build-app:dev'], function () {
     return gulp.src('./debug/index.html')
-           .pipe(inject(gulp.src('./debug/' + JS_LIB_DIR + '/*.js', {read: false, base: './debug'}), {name: 'jslibs', relative: true}))
+           .pipe(inject(gulp.src('./debug/' + JS_LIB_DIR + '/jquery.js', {read: false, base: './debug'}), {name: 'jquery', relative: true}))
+           .pipe(inject(gulp.src(['./debug/' + JS_LIB_DIR + '/*.js', '!./debug/' + JS_LIB_DIR + '/jquery.js'], {read: false, base: './debug'}), {name: 'jslibs', relative: true}))
            .pipe(inject(gulp.src('./debug/' + CSS_DIR + '/*.css', {read: false, base: './debug'}), {relative: true}))
-           .pipe(inject(gulp.src('./debug/' + JS_DIR, {read: false, base: './debug'}), {name: 'jsapp', relative: true}))
+           .pipe(inject(gulp.src('./debug/' + JS_DIR + '/*.js', {read: false, base: './debug'}), {name: 'jsapp', relative: true}))
            .pipe(gulp.dest('./debug'));
 });
 
-gulp.task('build:prod', ['copy-libs:prod', 'copy-html:prod', 'build-app:prod'], function () {
+gulp.task('build:prod', ['sass', 'copy-libs:prod', 'copy-html:prod', 'build-app:prod'], function () {
     return gulp.src('./deploy/index.html')
-           .pipe(inject(gulp.src('./deploy/' + JS_LIB_DIR + '/*.js', {read: false, base: './deploy'}), {name: 'jslibs', relative: true}))
+           .pipe(inject(gulp.src('./deploy/' + JS_LIB_DIR + '/jquery.min.js', {read: false, base: './deploy'}), {name: 'jquery', relative: true}))
+           .pipe(inject(gulp.src(['./deploy/' + JS_LIB_DIR + '/*.js', '!./deploy/' + JS_LIB_DIR + '/jquery.js'], {read: false, base: './deploy'}), {name: 'jslibs', relative: true}))
            .pipe(inject(gulp.src('./deploy/' + CSS_DIR + '/*.css', {read: false, base: './deploy'}), {relative: true}))
-           .pipe(inject(gulp.src('./deploy/' + JS_DIR, {read: false, base: './deploy'}), {name: 'jsapp', relative: true}))
+           .pipe(inject(gulp.src('./deploy/' + JS_DIR + '/*.js', {read: false, base: './deploy'}), {name: 'jsapp', relative: true}))
            .pipe(gulp.dest('./deploy'));
 });
 
@@ -158,4 +155,8 @@ gulp.task('clean:prod', function () {
 
 gulp.task('clean:all', ['clean:dev', 'clean:prod']);
 
+gulp.task('watch', function() {
+    gulp.watch(['src/js/*.js', 'index.html'], ['lint', 'build:all']);
+    gulp.watch('src/scss/*.scss', ['sass']);
+});
 gulp.task('default', ['lint', 'sass', 'build-app:all', 'copy-libs:all']);

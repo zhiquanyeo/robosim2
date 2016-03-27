@@ -1,0 +1,32 @@
+#app-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    display: -webkit-flex;
+    display: flex;
+    
+    flex-direction: column;
+    -webkit-flex-direction: column;
+}
+
+#toolbar {
+    padding: 4px;
+    display: inline-block;
+}
+
+#main-app {
+    flex: 1 0 auto;
+    -webkit-flex: 1 0 auto;
+    padding: 5px;
+}
+
+.app-panel {
+    display: block;
+    
+    &.hidden {
+        display: none;
+    }
+}
