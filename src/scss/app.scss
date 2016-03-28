@@ -21,12 +21,33 @@
     flex: 1 0 auto;
     -webkit-flex: 1 0 auto;
     padding: 5px;
+    position: relative;
+
+    & > .app-panel {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        bottom: 5px;
+        right: 5px;
+    }
 }
 
 .app-panel {
     display: block;
-    
+
     &.hidden {
         display: none;
     }
+}
+
+#code-view-blocks {
+    position: relative;
+}
+
+#blockly-canvas {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }

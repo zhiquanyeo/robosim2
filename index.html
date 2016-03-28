@@ -9,11 +9,31 @@
     
     <!-- jslibs:js -->
     <!-- endinject -->
+
+    <!-- aceeditor:js -->
+    <!-- endinject -->
+
+    <script src="js/libs/blockly/blockly_compressed.js"></script>
+    <script src="js/libs/blockly/blocks_compressed.js"></script>
+    <script src="js/libs/blockly/msg/js/en.js"></script>
+    <script src="js/libs/blockly/javascript_compressed.js"></script>
+
+    <!-- customblocks:js -->
+    <!-- endinject -->
     
     <!-- jsapp:js -->
     <!-- endinject -->
 </head>
 <body>
+    <xml id="toolbox" style="display: none">
+        <block type="controls_if"></block>
+        <block type="controls_repeat_ext"></block>
+        <block type="logic_compare"></block>
+        <block type="math_number"></block>
+        <block type="math_arithmetic"></block>
+        <block type="text"></block>
+        <block type="text_print"></block>
+    </xml>
     <div id="app-container">
         <div id="toolbar" class="ui-widget-header ui-corner-all">
             <span id="app-state">
@@ -28,11 +48,9 @@
                     <li><a href="#code-view-editor">Editor</a></li>
                 </ul>
                 <div id="code-view-blocks">
-                    Blocks!
+                    <div id="blockly-canvas"></div>
                 </div>
-                <div id="code-view-editor">
-                    Editor!
-                </div>
+                <div id="code-view-editor"></div>
             </div>
             <div id="sim-view" class="app-panel">
                 Sim View!

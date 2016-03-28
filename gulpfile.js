@@ -8,7 +8,6 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var inject = require('gulp-inject');
 var del = require('del');
-var runSequence = require('run-sequence');
 
 
 // Locations
@@ -20,7 +19,7 @@ var CSS_DIR = 'css';
 // Copy tasks
 var COPY_LIB_TASK_PREFIX = 'copy-libs-';
 
-var LIB_LIST = ['jquery', 'jqueryui'];
+var LIB_LIST = ['jquery', 'jqueryui', 'aceeditor', 'blockly'];
 
 // Generate the list of libs
 var COPY_LIB_TASKS_DEV = [];
@@ -67,7 +66,7 @@ gulp.task('build-app:all', ['build-app:dev', 'build-app:prod']);
 // -- jQuery
 gulp.task('copy-libs-dev-jquery', function () {
     return gulp.src('src/libs/jquery/jquery.js')
-           .pipe(gulp.dest('debug/' + JS_LIB_DIR)); 
+           .pipe(gulp.dest('debug/' + JS_LIB_DIR));
 });
 
 gulp.task('copy-libs-prod-jquery', function () {
@@ -78,7 +77,7 @@ gulp.task('copy-libs-prod-jquery', function () {
 // -- jQueryUI
 gulp.task('copy-libs-dev-jqueryui-js', function () {
     return gulp.src('src/libs/jquery-ui/jquery-ui.js')
-           .pipe(gulp.dest('debug/' + JS_LIB_DIR)); 
+           .pipe(gulp.dest('debug/' + JS_LIB_DIR));
 });
 
 gulp.task('copy-libs-dev-jqueryui-css', function () {
@@ -88,7 +87,7 @@ gulp.task('copy-libs-dev-jqueryui-css', function () {
 
 gulp.task('copy-libs-prod-jqueryui-js', function () {
     return gulp.src('src/libs/jquery-ui/jquery-ui.min.js')
-           .pipe(gulp.dest('deploy/' + JS_LIB_DIR)); 
+           .pipe(gulp.dest('deploy/' + JS_LIB_DIR));
 });
 
 gulp.task('copy-libs-prod-jqueryui-css', function () {
@@ -99,6 +98,54 @@ gulp.task('copy-libs-prod-jqueryui-css', function () {
 gulp.task('copy-libs-dev-jqueryui', ['copy-libs-dev-jqueryui-js', 'copy-libs-dev-jqueryui-css']);
 gulp.task('copy-libs-prod-jqueryui', ['copy-libs-prod-jqueryui-js', 'copy-libs-prod-jqueryui-css']);
 
+// -- Ace Editor
+gulp.task('copy-libs-dev-aceeditor', function () {
+    return gulp.src('src/libs/ace/src/**/*.js')
+           .pipe(gulp.dest('debug/' + JS_LIB_DIR + '/ace'));
+});
+
+gulp.task('copy-libs-prod-aceeditor', function () {
+    return gulp.src('src/libs/ace/src-min/**/*.js')
+           .pipe(gulp.dest('deploy/' + JS_LIB_DIR + '/ace'));
+});
+
+// -- Blockly
+gulp.task('copy-libs-dev-blockly-js', function () {
+    return gulp.src(['src/libs/blockly/**/*.js',
+                     '!src/libs/blockly/appengine/**/*',
+                     '!src/libs/blockly/blocks/**/*',
+                     '!src/libs/blockly/core/**/*',
+                     '!src/libs/blockly/demos/**/*',
+                     '!src/libs/blockly/generators/**/*',
+                     '!src/libs/blockly/i18n/**/*',
+                     '!src/libs/blockly/tests/**/*'])
+           .pipe(gulp.dest('debug/' + JS_LIB_DIR + '/blockly'));
+});
+
+gulp.task('copy-libs-prod-blockly-js', function () {
+    return gulp.src(['src/libs/blockly/**/*.js',
+                     '!src/libs/blockly/appengine/**/*',
+                     '!src/libs/blockly/blocks/**/*',
+                     '!src/libs/blockly/core/**/*',
+                     '!src/libs/blockly/demos/**/*',
+                     '!src/libs/blockly/generators/**/*',
+                     '!src/libs/blockly/i18n/**/*',
+                     '!src/libs/blockly/tests/**/*'])
+           .pipe(gulp.dest('deploy/' + JS_LIB_DIR + '/blockly'));
+});
+
+gulp.task('copy-libs-dev-blockly-media', function () {
+    return gulp.src('src/libs/blockly/media/**/*')
+           .pipe(gulp.dest('debug/' + JS_LIB_DIR + '/blockly/media'));
+});
+
+gulp.task('copy-libs-prod-blockly-media', function () {
+    return gulp.src('src/libs/blockly/media/**/*')
+           .pipe(gulp.dest('deploy/' + JS_LIB_DIR + '/blockly/media'));
+});
+
+gulp.task('copy-libs-dev-blockly', ['copy-libs-dev-blockly-js', 'copy-libs-dev-blockly-media']);
+gulp.task('copy-libs-prod-blockly', ['copy-libs-prod-blockly-js', 'copy-libs-prod-blockly-media']);
 
 // Finally, the overarching lib copying tasks
 gulp.task('copy-libs:dev', COPY_LIB_TASKS_DEV);
@@ -109,12 +156,12 @@ gulp.task('copy-libs:all', ['copy-libs:dev', 'copy-libs:prod']);
 
 gulp.task('copy-html:dev', function () {
     return gulp.src('./index.html')
-           .pipe(gulp.dest('debug')); 
+           .pipe(gulp.dest('debug'));
 });
 
 gulp.task('copy-html:prod', function () {
     return gulp.src('./index.html')
-           .pipe(gulp.dest('deploy')); 
+           .pipe(gulp.dest('deploy'));
 });
 
 gulp.task('copy-html:all', ['copy-html:dev', 'copy-html:prod']);
@@ -126,6 +173,7 @@ gulp.task('build:dev', ['sass', 'copy-libs:dev', 'copy-html:dev', 'build-app:dev
            .pipe(inject(gulp.src(['./debug/' + JS_LIB_DIR + '/*.js', '!./debug/' + JS_LIB_DIR + '/jquery.js'], {read: false, base: './debug'}), {name: 'jslibs', relative: true}))
            .pipe(inject(gulp.src('./debug/' + CSS_DIR + '/*.css', {read: false, base: './debug'}), {relative: true}))
            .pipe(inject(gulp.src('./debug/' + JS_DIR + '/*.js', {read: false, base: './debug'}), {name: 'jsapp', relative: true}))
+           .pipe(inject(gulp.src('./debug/' + JS_LIB_DIR + '/ace/ace.js', {read: false, base: './debug'}), {name: 'aceeditor', relative: true}))
            .pipe(gulp.dest('./debug'));
 });
 
@@ -135,6 +183,7 @@ gulp.task('build:prod', ['sass', 'copy-libs:prod', 'copy-html:prod', 'build-app:
            .pipe(inject(gulp.src(['./deploy/' + JS_LIB_DIR + '/*.js', '!./deploy/' + JS_LIB_DIR + '/jquery.js'], {read: false, base: './deploy'}), {name: 'jslibs', relative: true}))
            .pipe(inject(gulp.src('./deploy/' + CSS_DIR + '/*.css', {read: false, base: './deploy'}), {relative: true}))
            .pipe(inject(gulp.src('./deploy/' + JS_DIR + '/*.js', {read: false, base: './deploy'}), {name: 'jsapp', relative: true}))
+           .pipe(inject(gulp.src('./deploy/' + JS_LIB_DIR + '/ace/ace.js', {read: false, base: './deploy'}), {name: 'aceeditor', relative: true}))
            .pipe(gulp.dest('./deploy'));
 });
 
