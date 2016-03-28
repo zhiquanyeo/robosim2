@@ -174,6 +174,12 @@ gulp.task('build:dev', ['sass', 'copy-libs:dev', 'copy-html:dev', 'build-app:dev
            .pipe(inject(gulp.src('./debug/' + CSS_DIR + '/*.css', {read: false, base: './debug'}), {relative: true}))
            .pipe(inject(gulp.src('./debug/' + JS_DIR + '/*.js', {read: false, base: './debug'}), {name: 'jsapp', relative: true}))
            .pipe(inject(gulp.src('./debug/' + JS_LIB_DIR + '/ace/ace.js', {read: false, base: './debug'}), {name: 'aceeditor', relative: true}))
+           .pipe(inject(gulp.src('./toolbox.xml'), {
+                starttag: '<!-- inject:toolbox:{{ext}} -->',
+                transform: function (filePath, file) {
+                    return file.contents.toString('utf8');
+                }
+           }))
            .pipe(gulp.dest('./debug'));
 });
 
@@ -184,6 +190,12 @@ gulp.task('build:prod', ['sass', 'copy-libs:prod', 'copy-html:prod', 'build-app:
            .pipe(inject(gulp.src('./deploy/' + CSS_DIR + '/*.css', {read: false, base: './deploy'}), {relative: true}))
            .pipe(inject(gulp.src('./deploy/' + JS_DIR + '/*.js', {read: false, base: './deploy'}), {name: 'jsapp', relative: true}))
            .pipe(inject(gulp.src('./deploy/' + JS_LIB_DIR + '/ace/ace.js', {read: false, base: './deploy'}), {name: 'aceeditor', relative: true}))
+           .pipe(inject(gulp.src('./toolbox.xml'), {
+                starttag: '<!-- inject:toolbox:{{ext}} -->',
+                transform: function (filePath, file) {
+                    return file.contents.toString('utf8');
+                }
+           }))
            .pipe(gulp.dest('./deploy'));
 });
 
